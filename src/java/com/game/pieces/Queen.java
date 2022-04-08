@@ -14,4 +14,34 @@ public class Queen extends Piece {
     {
 
     }
+
+    @Override
+    public boolean isPawn() {
+        return false;
+    }
+
+    @Override
+    public boolean isKnight() {
+        return false;
+    }
+
+    @Override
+    public boolean isBishop() {
+        return false;
+    }
+
+    @Override
+    public boolean isRook() {
+        return false;
+    }
+
+    @Override
+    public boolean isQueen() {
+        return true;
+    }
+
+    @Override
+    public boolean isKing() {
+        return false;
+    }
 }

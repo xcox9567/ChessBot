@@ -4,9 +4,6 @@ import javafx.scene.layout.StackPane;
 
 public abstract class Piece extends StackPane {
 
-    public static final int WHITE = 0;
-    public static final int BLACK = 1;
-
     private Tile square;
     private String image;
     private int type;
@@ -34,4 +31,11 @@ public abstract class Piece extends StackPane {
     {
         return square;
     }
+
+    public abstract boolean isPawn();
+    public abstract boolean isKnight();
+    public abstract boolean isBishop();
+    public abstract boolean isRook();
+    public abstract boolean isQueen();
+    public abstract boolean isKing();
 }

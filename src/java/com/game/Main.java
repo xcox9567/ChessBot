@@ -1,6 +1,7 @@
 package com.game;
 
-import com.engine.Board;
+import com.engine.BitBoard;
+import com.engine.MoveTree;
 import com.game.pieces.*;
 import javafx.application.Application;
 import javafx.geometry.HPos;
@@ -58,6 +59,13 @@ public class Main extends Application {
         return root;
     }
 
+    /**
+     * Moves a piece between the from and to Tile objects
+     *
+     * @param from - The origin Tile of the piece to be moved
+     * @param to - The destination Tile of the piece to be moved
+     * @throws FileNotFoundException - If image file for the piece cannot be found
+     */
     public void movePiece(Tile from, Tile to) throws FileNotFoundException
     {
         if(!from.isEmpty())
@@ -67,7 +75,14 @@ public class Main extends Application {
         }
     }
 
-    public void loadFromBitboard(Board bitboard) throws FileNotFoundException
+    /**
+     * loadFromBitboard() fills the Tile objects of the board field with the necessary pieces based on data from the
+     * given Board object
+     *
+     * @param bitboard - Board object that gives data on board position
+     * @throws FileNotFoundException - If image file for a piece cannot be found
+     */
+    public void loadFromBitboard(BitBoard bitboard) throws FileNotFoundException
     {
         long bPawns = bitboard.getPieces(BLACK | PAWN);
         for(int i = 0; i < 64; i++)
@@ -238,9 +253,14 @@ public class Main extends Application {
         }
     }
 
-    public Board loadBitboard()
+    /**
+     * loadBoard() returns the bitboard representation of the board field in it's current state.
+     *
+     * @return - Board object containing the bitboard representation of the board field
+     */
+    public BitBoard loadBitboard()
     {
-        Board bitboard = new Board();
+        BitBoard bitboard = new BitBoard();
 
         long wPieces = 0x0;
         for(int r = 7; r >= 0; r--)
@@ -365,19 +385,75 @@ public class Main extends Application {
         return bitboard;
     }
 
-    public Tile[] makeMove()
+    /**
+     * Returns a move for the given color based off of the current position given by the board field.
+     *
+     * @param color - 8 to represent white-to-move and 16 to represent black-to-move
+     * @return - An array of tiles representing the ordered pair (origin, destination)
+     */
+    public Tile[] makeMove(int color)
     {
         Tile[] move = new Tile[2];
-        Board state = loadBitboard();
+
+        BitBoard state = loadBitboard();
 
         return move;
+    }
+
+    public MoveTree genMoveTree(int color, MoveTree mTree, int depth)
+    {
+        if (depth <= 0)
+        {
+            return mTree;
+        }
+        for(int r = 0; r < 8; r++)
+        {
+            for(int f = 0; f < 8; f++)
+            {
+                if(!board[r][f].isEmpty())
+                {
+                    Piece piece = board[r][f].getPiece();
+                    if(piece.getType() == color)
+                    {
+                        if(piece.isPawn())
+                        {
+                            //Determine possible moves
+                            //Add bitboard forms of them to children of mTree
+                            //Run genMoveTree on those moves (may need to reformat board data structure for this)
+                        }
+                        if(piece.isKnight())
+                        {
+
+                        }
+                        if(piece.isBishop())
+                        {
+
+                        }
+                        if(piece.isRook())
+                        {
+
+                        }
+                        if(piece.isQueen())
+                        {
+
+                        }
+                        if(piece.isKing())
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return mTree;
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException
     {
         Scene scene = new Scene(createContent(),540,540);
-        Board gBoard = new Board();
+        BitBoard gBoard = new BitBoard();
         loadFromBitboard(gBoard);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Chess Bot");

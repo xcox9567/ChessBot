@@ -1,24 +1,12 @@
 package com.engine;
 
-import com.game.Main;
-
 import java.util.ArrayList;
 
 import static com.game.Main.WHITE;
 import static com.game.Main.BLACK;
-import static com.game.Main.PAWN;
-import static com.game.Main.KNIGHT;
-import static com.game.Main.BISHOP;
-import static com.game.Main.ROOK;
-import static com.game.Main.QUEEN;
-import static com.game.Main.KING;
 
-public class Board {
+public class BitBoard {
 
-    /*
-    com.engine.Board state is stored in these 8 separate bitboards
-    Each of the 64 bits of the long represent whether a piece of that kind is on that square
-     */
     private final int[] deBruijn = {
             63,30, 3,32,59,14,11,33,
             60,24,50, 9,55,19,21,34,
@@ -39,10 +27,10 @@ public class Board {
     private long queens;
     private long kings;
 
-    /*
-    Initializes board to starting position
+    /**
+     * Initializes the bitboards to represent the standard starting position.
      */
-    public Board()
+    public BitBoard()
     {
         wPieces = 0xFFFF000000000000L;
         bPieces = 0x000000000000FFFFL;
@@ -54,7 +42,11 @@ public class Board {
         kings = 0x1000000000000010L;
     }
 
-    public Board(Board board)
+    /**
+     * Initializes a copy of the given Board instance
+     * @param board - Board state to be copied.
+     */
+    public BitBoard(BitBoard board)
     {
         wPieces = board.getwPieces();
         bPieces = board.getbPieces();
@@ -66,6 +58,12 @@ public class Board {
         kings = board.getKings();
     }
 
+    /**
+     * Finds the bit-index of the LSB of the given bitboard
+     *
+     * @param bb - Bitboard whose LSB is to be indexed
+     * @return - The bit-index of the LSB in bb
+     */
     public int bitScanForward(long bb)
     {
         bb ^= (bb - 1);
@@ -73,6 +71,12 @@ public class Board {
         return deBruijn[(folded * 0x78291ACF) >>> 26];
     }
 
+    /**
+     * Converts bb to a 1D list representation of the piece indexes bb was implying
+     *
+     * @param bb - Bitboard to be converted (serialized)
+     * @return - ArrayList<Integer> of the board indexes bb represents
+     */
     public ArrayList<Integer> serialize(long bb)
     {
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -137,8 +141,11 @@ public class Board {
         return count;
     }
 
-    /*
-    Returns a bitboard representing the locations of the searched for piece
+    /**
+     * Returns a bitboard representing the locations of the given piece int.
+     *
+     * @param piece - 3-digit Binary int representing the piece.
+     * @return - Bitboard representation of the locations of the given piece
      */
     public long getPieces(int piece)
     {
@@ -272,8 +279,8 @@ public class Board {
 
     //public ArrayList<> getPawnMoves(int color)
 
-    /*
-    Returns a 2D array representation of the current board state with each square represented by an int
+    /**
+     * @return - 2D string representation of the current board state as represented by the bitboards
      */
     public String[][] getStringArr()
     {
